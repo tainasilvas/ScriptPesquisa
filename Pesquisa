@@ -1,0 +1,47 @@
+#Create by Tainá Santos
+
+#importando bibliotecas
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from pyhive import presto,trino
+import pandas as pd
+import getpass
+
+df_clientes = pd.read_excel('RegistrosClientes.xlsx')
+
+Compras = pd.DataFrame()
+
+password = “Senha”
+
+#conectando ao banco de dados
+
+conn_presto = presto.connect(host = 'link.do.host'
+, port = 0000
+, protocol = 'https'
+, username = 'login'
+, password = password)
+
+conn_trino = trino.connect(host = 'link.do.host'
+, port = 000
+, protocol = 'https'
+, username = 'login'
+, password = password)
+
+id_cliente = df_clientes['Id'].unique().tolist()
+id_cliente = str(Id).replace("[","").replace("]","")
+
+#query 
+base = """
+
+select *
+from tabela
+where chave_primaria in (%s)""" % clientid
+
+df = pd.read_sql_query(base, conn_trino)
+
+df["Id"] = df["Id"].fillna(0).astype('float').astype('Int64')
+
+compras = pd.merge(df, df_clientes, on=["Id"], how="inner")
+
+compras.to_excel('resultado'+'.xlsx')
